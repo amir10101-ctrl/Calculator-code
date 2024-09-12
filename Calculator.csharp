@@ -1,1 +1,159 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Diagnostics;
+using System.Diagnostics.Eventing.Reader;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
+namespace WindowsFormsApp2
+{
+    public partial class Form1 : Form
+    {
+        double  x, y,z;
+        string op;
+        Boolean flag,result,opretor;
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void Form1_load(object sender, EventArgs e)
+        {
+            txt1_TextChanged(null, null);
+        }
+
+        private void OPERATOR(object sender, EventArgs e)
+        {
+            if (op != null)
+            {
+                btnResult_Click(null, null);
+            }
+            x = Convert.ToDouble(txt1.Text);
+            op = ((Button)sender).Text;
+            flag = true;
+            opretor = true;
+        }
+
+        private void btnOn_Click(object sender, EventArgs e)
+        {
+            String s;
+            s = "ABCDEF";
+            MessageBox.Show(s.Length.ToString());
+           // Boolean t;
+           //  t = s.Contains("C");
+           //  MessageBox.Show(s.Contains("C"));
+        }
+
+        private void txt1_TextChanged(object sender, EventArgs e)
+        {
+            if (txt1.Text.Contains(".") == true)
+            {
+                btnFlout.Enabled = false;
+            }else
+            {
+                btnFlout.Enabled = true;
+            }
+            btnPak.Enabled = Convert.ToBoolean(txt1.Text.Length);
+        }
+
+        private void btnPak_Click(object sender, EventArgs e)
+        {
+            if (txt1.Text.Length > 0)
+            {
+                txt1.Text = txt1.Text.Substring(0, txt1.Text.Length - 1);
+            }
+        }
+
+        private void btnOn_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            MessageBox.Show("now the keypress of runing "+e.KeyChar.ToString());
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void Form1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            foreach (Button x in panel1.Controls)
+            {
+                if (x.Text == e.KeyChar.ToString())
+                {
+                    x.Focus();
+                    x.ForeColor = Color.DarkGreen;
+                }else
+                {
+                    x.ForeColor= Color.White;
+                }
+            }
+
+            Button temp = new Button();
+            temp.Text = e.KeyChar.ToString();
+            if (e.KeyChar >= '0' && e.KeyChar <= '9')
+            {
+                number(temp, null);
+            }
+            else if (e.KeyChar == '+' || e.KeyChar == '-' || e.KeyChar == '*' || e.KeyChar == '/')
+            {
+                OPERATOR(temp, null);
+            }
+            else if (e.KeyChar == '=')
+            {
+                btnResult_Click(null, null);
+            }
+            else if (e.KeyChar == '.' && !txt1.Text.Contains("."))
+            {
+                number(temp , null);
+            }
+            else if (e.KeyChar == '\b')
+            {
+                btnPak_Click(null, null);
+            }
+        }
+
+        private void btnClear_Click(object sender, EventArgs e)
+        {
+            flag = false;
+            result = false;
+            opretor= false;
+            txt1.Text = "";
+        }
+
+        private void btnResult_Click(object sender, EventArgs e)
+        {
+            y = Convert.ToDouble(txt1.Text);
+            switch (op)
+            {
+               case "+":
+                    z = x + y; break;
+                    case "-":
+                    z = x - y; break;
+                    case "*":
+                    z = x * y; break;
+                    case "/":
+                    z =  x / y; break;
+                   
+            }
+            txt1.Text = z.ToString();
+            op = null;
+            result = true;
+        }
+
+        private void number(object sender, EventArgs e)
+        {
+            
+            if(flag == true)
+            {
+                txt1.Text = "";
+                flag = false;
+            }
+            txt1.Text += ((Button)sender).Text;
+        }
+    }
+}
